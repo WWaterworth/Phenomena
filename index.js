@@ -7,6 +7,7 @@ const express = require("express");
 const server = express();
 // Require morgan and body-parser middleware
 const morgan = require("morgan");
+const bodyParser = require("body-parser");
 // Have the server use morgan with setting 'dev'
 server.use(morgan("dev"));
 // Import cors
@@ -14,7 +15,7 @@ server.use(morgan("dev"));
 const cors = require("cors");
 server.use(cors());
 // Have the server use bodyParser.json()
-server.use(express.json());
+server.use(bodyParser.json());
 // Have the server use your api router with prefix '/api'
 const apiRouter = require("./api");
 server.use("/api", apiRouter);
