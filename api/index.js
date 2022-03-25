@@ -33,7 +33,14 @@ apiRouter.get("/reports", async (req, res, next) => {
  * - on success, it should send back the object returned by createReport
  * - on caught error, call next(error)
  */
-
+apiRouter.post("/reports", async (req, res, next) => {
+  try {
+    const newReport = await createReport(req.body);
+    res.send(newReport);
+  } catch (error) {
+    next(error);
+  }
+});
 /**
  * Set up a DELETE request for /reports/:reportId
  *
@@ -43,7 +50,17 @@ apiRouter.get("/reports", async (req, res, next) => {
  * - on success, it should send back the object returned by closeReport
  * - on caught error, call next(error)
  */
-
+apiRouter.delete("/reports/:reportId", async (req, res, next) => {
+  try {
+    const reportToClose = await closeReport(
+      req.params.reportId,
+      req.body.password
+    );
+    res.send(reportToClose);
+  } catch (error) {
+    next(error);
+  }
+});
 /**
  * Set up a POST request for /reports/:reportId/comments
  *
@@ -53,6 +70,16 @@ apiRouter.get("/reports", async (req, res, next) => {
  * - on success, it should send back the object returned by createReportComment
  * - on caught error, call next(error)
  */
-
+apiRouter.post("/reports/:reportId/comments", async (req, res, next) => {
+  try {
+    const reportComments = await createReportComment(
+      req.params.reportId,
+      req.body
+    );
+    res.send(reportComments);
+  } catch (error) {
+    next(error);
+  }
+});
 // Export the apiRouter
 module.exports = apiRouter;
