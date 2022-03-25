@@ -24,21 +24,17 @@ const client = new Client(CONNECTION_STRING);
 async function getOpenReports() {
   try {
     // first load all of the reports which are open
-    const {
-      rows: [...report],
-    } = await client.query(
+    const { rows: reports } = await client.query(
       `
       SELECT *
       FROM reports
-      WHERE "isOpen" = true
+      WHERE "isOpen" = TRUE
       `
     );
 
     // then load the comments only for those reports, using a
     // WHERE "reportId" IN () clause
-    const {
-      rows: [...comments],
-    } = await client.query(
+    const { rows: comments } = await client.query(
       `
       SELECT *
       FROM comments
@@ -51,18 +47,12 @@ async function getOpenReports() {
     );
 
     // then, build two new properties on each report:
-    report.forEach((report) => {
+    reports.forEach((report) => {
       // .comments for the comments which go with it
       //    it should be an array, even if there are none
-      const reportComments = comments.find((comment) => {
+      report.comments = comments.filter((comment) => {
         return comment.reportId === report.id;
       });
-
-      if (reportComments) {
-        report.comments = [reportComments];
-      } else {
-        report.comments = [];
-      }
 
       // .isExpired if the expiration date is before now
       //    you can use Date.parse(report.expirationDate) < new Date()
@@ -77,7 +67,7 @@ async function getOpenReports() {
       delete report.password;
     });
 
-    return report;
+    return reports;
   } catch (error) {
     throw error;
   }

@@ -8,14 +8,22 @@ const {
   createReportComment,
   createReport,
 } = require("../db");
-/**
- * Set up a GET request for /reports
- *
- * - it should use an async function
- * - it should await a call to getOpenReports
- * - on success, it should send back an object like { reports: theReports }
- * - on caught error, call next(error)
- */
+
+//  Set up a GET request for /reports
+//  it should use an async function
+//  it should await a call to getOpenReports
+//  on success, it should send back an object like { reports: theReports }
+//  on caught error, call next(error)
+apiRouter.get("/reports", async (req, res, next) => {
+  try {
+    const openReports = await getOpenReports();
+    res.send({
+      reports: openReports,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 /**
  * Set up a POST request for /reports

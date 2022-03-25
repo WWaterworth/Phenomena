@@ -21,8 +21,9 @@ const apiRouter = require("./api");
 server.use("/api", apiRouter);
 // Import the client from your db/index.js
 const { client } = require("./db/index");
+
 // Create custom 404 handler that sets the status code to 404.
-server.use("*", (req, res, next) => {
+server.use((req, res, next) => {
   res.status(404);
   next();
   res.send({ error: "Not found" });
